@@ -37,6 +37,25 @@ public class DogController {
         return new ResponseEntity<List<Dog>>(dogs, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/dogMultipart", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public ResponseEntity<Dog> updateUser(
+            @RequestPart("dog") String dog,
+            @RequestPart("file") MultipartFile file) {
+
+        System.out.println(dog);
+        System.out.println(file.getName());
+        return new ResponseEntity<Dog>(new Dog("df", ""), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/dogEntity", method = RequestMethod.POST)
+    public ResponseEntity<Dog> updateDog(
+            @RequestBody Dog dog) {
+
+        System.out.println(dog);
+        return new ResponseEntity<Dog>(new Dog("df", ""), HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/dog", method = RequestMethod.POST, consumes = {"multipart/form-data"})
     public ResponseEntity<Dog> updateUser(
                                           @RequestPart("dog") Dog dog,
