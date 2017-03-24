@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by Pukho on 05.03.2017.
@@ -19,9 +20,10 @@ public class DogServiceImpl implements DogService {
     private Dao dao;
 
     @Override
-    public void save(Dog dog) {
-        String sql = "insert into dogs (name, picture) values (:name, :pictureLocation)";
-        dao.save(sql, dog);
+    public Dog save(Dog dog) {
+        String sql = "insert into dogs (name, picture) values " +
+                "(:name, :pictureLocation) returning *";
+        return dao.saveUpdate(sql, dog, new DogMapper());
     }
 
     @Override
@@ -30,7 +32,7 @@ public class DogServiceImpl implements DogService {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        return dao.get(sql, params, new DogMapper());
+       return dao.get(sql, params, new DogMapper());
     };
 
     @Override
@@ -44,9 +46,10 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public void update(Dog dog) {
-        String sql = "UPDATE dogs set name=:name, picture=:pictureLocation where id=:id";
-        dao.update(sql, dog);
+    public Dog  update(Dog dog) {
+        String sql = "update dogs set name=:name, picture=:pictureLocation " +
+                "where id=:id returning *";
+        return dao.saveUpdate(sql, dog, new DogMapper());
     }
 
     @Override

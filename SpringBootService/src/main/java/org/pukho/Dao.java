@@ -20,9 +20,9 @@ public class Dao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public <T> void save(String sql, T entity) {
+    public <T> T saveUpdate(String sql, T entity, RowMapper<T> rowMapper) {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
-        jdbcTemplate.update(sql, namedParameters);
+        return jdbcTemplate.queryForObject(sql, namedParameters, rowMapper);
     }
 
     public <T> List<T> getAll(String sql, RowMapper<T> rowMapper) {
@@ -30,18 +30,11 @@ public class Dao {
     }
 
     public <T> T get(String sql,  Map<String, Object> params, RowMapper<T> rowMapper) {
-
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(params),
                 rowMapper);
     }
 
     public void remove(String sql,  Map<String, Object> params) {
-
         jdbcTemplate.update(sql, new MapSqlParameterSource(params));
-    }
-
-    public <T> void update(String sql, T entity) {
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
-        jdbcTemplate.update(sql, namedParameters);
     }
 }

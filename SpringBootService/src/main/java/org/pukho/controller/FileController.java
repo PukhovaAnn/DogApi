@@ -2,6 +2,8 @@ package org.pukho.controller;
 
 import org.pukho.PictureDownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,16 +17,17 @@ import java.util.Optional;
  */
 
 @RestController
-@CrossOrigin(origins = "http://localhost:9000")
 public class FileController {
 
     @Autowired
     private PictureDownloadService pictureService;
 
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public void getFileHandler(HttpServletResponse response, @RequestParam("pictureDog") String picture) {
+    @RequestMapping(value = "/picture/", method = RequestMethod.GET)
+    public void getFileHandler(HttpServletResponse response,
+                               @RequestParam(name = "location") String fileLocation) {
 
-        final Optional<Path> filePath = pictureService.getPicturePathByLocation(picture);
+
+        Optional<Path> filePath = pictureService.getImagePathByLocation(fileLocation);
 
         if (filePath.isPresent()) {
             try {
@@ -33,7 +36,7 @@ public class FileController {
                 System.out.println(e.getMessage());
             }
         } else {
-            System.out.println("QO");
+             response.reset();
         }
     }
 }

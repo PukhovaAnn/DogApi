@@ -4,14 +4,15 @@ package org.pukho.service;
 import org.pukho.model.Dog;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Pukho on 05.03.2017.
  */
 public interface DogService {
-     void save(Dog dog);
-     public Dog get(long id);
-     public void remove(Integer id);
-     public void update(Dog dog);
+     Dog save(Dog dog);
+     Dog get(long id);
+     void remove(Integer id);
+     Dog update(Dog dog);
      List<Dog> getAll();
 }

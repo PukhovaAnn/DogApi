@@ -1,8 +1,12 @@
 package org.pukho;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -28,23 +32,36 @@ public class PictureDownloadService {
 
     private String picturesDirectory;
 
+    @Value("${files.default}")
+    private String defaultPicture;
+
     @PostConstruct
     private void prepareWorkingDirectory() {
         final String workingDirectory = System.getProperty("user.home") + File.separator + directory;
         picturesDirectory = workingDirectory + File.separator + "avatars";
         new File(picturesDirectory).mkdirs();
+
+        saveDefaultPicture();
     }
 
-        public Optional<Path> savePicture(final MultipartFile file) {
-            requireNonNull(file, "picture must not be null");
-            try (InputStream in = file.getInputStream()) {
-                return Optional.of(savePicture(in, file.getOriginalFilename()));
-            } catch (IOException e) {
-                System.out.println("savw");
-            }
-            return Optional.empty();
+    private void saveDefaultPicture() {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(defaultPicture);
+        try {
+            savePicture(inputStream, defaultPicture);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
+        public Optional<Path> savePictureFromFile(final MultipartFile file) {
+                try (InputStream in = file.getInputStream()) {
+                    return Optional.of(savePicture(in, file.getOriginalFilename()));
+                } catch (IOException e) {
+                    System.out.println(e.toString());
+                }
+                return Optional.empty();
+        }
 
     private Path savePicture(final InputStream stream, final String fileName) throws IOException {
         final Path path = Paths.get(picturesDirectory, fileName);
@@ -55,22 +72,20 @@ public class PictureDownloadService {
         return path;
     }
 
-
-    public Optional<Path> getPicturePathByLocation(String fileName) {
-        System.out.println(picturesDirectory);
-        Path path = getPathByName(fileName, picturesDirectory).orElse(null);
-        return getPathByName(fileName, picturesDirectory);
-    }
-
-    private Optional<Path> getPathByName(String filename, final String workingDirectory) {
-        requireNonNull(filename, "filename must not be null");
-
-        filename = "CAM03215.jpg";
-        final Path path = Paths.get(workingDirectory, filename);
+    public Optional<Path> getImagePathByLocation(String filePath) {
+        Path path = Paths.get(filePath);
         if (!exists(path)) {
             return Optional.empty();
         }
         return Optional.of(path);
     }
 
+    public Optional<Path> getPathByName(String fileName) {
+        final Path path = Paths.get(picturesDirectory, fileName);
+
+        if (!exists(path)) {
+            return Optional.empty();
+        }
+        return Optional.of(path);
+    }
 }

@@ -1,1 +1,1 @@
-include 'SpringBootService'
+include ':SpringBootService'

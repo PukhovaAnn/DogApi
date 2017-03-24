@@ -5,6 +5,10 @@ package org.pukho.model;
  */
 public class Dog {
 
+    public Dog(String name) {
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }
