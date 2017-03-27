@@ -1,0 +1,30 @@
+<html>
+<head>
+</head>
+<body>
+<div class="modal-header">
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <img ng-src={{cntrl.dog.picture}} class="img-rounded" height="250" width="250">
+        </div>
+        <div class="col-md-6">
+            <form name="editForm">
+            <input type="text" name="name" ng-model="cntrl.dog.name" ng-minlength="1" required
+                   class="form-control" placeholder="Dog Name"/>
+            <div class="panel panel-danger" ng-show="editForm.name.$error.required">
+                <div class="panel-heading">Enter Dog Name</div>
+            </div>
+            <input type="file" accept="image/*" ng-file-select="onFileSelect($files)">
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-warning" type="button" ng-click="cntrl.close()">Close</button>
+<button ng-click="cntrl.save()" class="btn btn-primary">Save</button>
+<button ng-show="cntrl.dog.id" ng-click="cntrl.delete()" class="btn btn-danger">Delete</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+    <button ng-click="cntrl.modalOpenAdd()" class="btn btn-info">Create</button>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(key, dog) in cntrl.dogs">
+            <td>{{dog.name}}</td>
+            <td><button ng-click="cntrl.modalOpenEdit(key)" class="btn btn-primary">Profile</button></td>
+        </tr>
+        <!--<h1><a ng-href="#/add/">Add</a></h1>-->
+        </tbody>
+    </table>
+    </div>
+</div>
